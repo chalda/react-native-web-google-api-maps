@@ -7,6 +7,9 @@
 node_modules/
 npm-debug.log
 yarn-error.log
-dist/
+
+# build folder, remove later
+#dist/
+
 /.idea
 /.vscode
