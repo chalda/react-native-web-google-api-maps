@@ -1,0 +1,54 @@
+{
+    "name": "react-native-web-google-api-maps",
+    "version": "1.0.0",
+    "description": "React Native web implementation for react-native-maps using @react-google-maps/api",
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:chalda/react-native-web-google-api-maps.git"
+    },
+    "author": {
+        "name": "Alex Chaldyshev",
+        "email": "alex.chaldyshev+github@gmail.com",
+        "url": "https://github.com/chalda"
+    },
+    "license": "MIT",
+    "keywords": [
+        "rn",
+        "google maps",
+        "react google maps",
+        "react",
+        "expo",
+        "react-native",
+        "react-native-web",
+        "react-native-maps",
+        "react-native-web-maps",
+        "react-native-google-maps"
+    ],
+    "main": "dist/index.js",
+    "main-es": "src/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc -b",
+        "dev": "tsc -b --watch"
+    },
+    "dependencies": {
+        "@react-google-maps/api": "^2.20.6",
+        "react": "18.3.1",
+        "react-dom": "18.3.1"
+    },
+    "peerDependencies": {
+        "react": "18.3.1",
+        "react-dom": "18.3.1",
+        "react-native": "0.76.9",
+        "react-native-maps": "1.18.0",
+        "react-native-web": "0.19.13"
+    },
+    "devDependencies": {
+        "@types/react": "18.3.18",
+        "@types/react-dom": "18.3.5",
+        "eslint": "^9.22.0",
+        "prettier": "^3.5.3",
+        "react-dom": "18.3.1",
+        "typescript": "^5.8.3"
+    }
+}
