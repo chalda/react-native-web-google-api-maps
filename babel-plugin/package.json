@@ -1,7 +1,0 @@
-{
-    "name": "@your-org/react-native-maps-web-babel-plugin",
-    "version": "1.0.0",
-    "main": "index.js",
-    "keywords": ["babel-plugin", "react-native", "maps", "web", "interop"]
-  }
-  
