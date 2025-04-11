@@ -24,6 +24,10 @@
         "react-native-web-maps",
         "react-native-google-maps"
     ],
+    "exports": {
+        "./babel-plugin": "./babel-plugin/index.js",
+        "./*": "./dist/*.js"
+    },
     "main": "dist/index.js",
     "main-es": "src/index.js",
     "types": "dist/index.d.ts",
@@ -50,9 +54,5 @@
         "prettier": "^3.5.3",
         "react-dom": "18.3.1",
         "typescript": "^5.8.3"
-    },
-    "exports": {
-        "./babel": "./babel/index.js",
-        "./*": "./dist/*.js"
     }
 }

@@ -163,7 +163,8 @@ export const GoogleMapView: React.FC<MapViewProps> = ({
                 onLoad={onMapLoad}
                 onUnmount={(map) => {
                     if (mapRef.current === map) mapRef.current = null;
-                  }}                onDrag={handleBoundsChanged}
+                }}
+                onDrag={handleBoundsChanged}
                 onDragEnd={handleDragEnd}
                 onClick={handleClick}
                 onRightClick={handleRightClick}
@@ -182,6 +183,5 @@ export const GoogleMapView: React.FC<MapViewProps> = ({
         </div>
     );
 };
-
 
 export default GoogleMapView;
