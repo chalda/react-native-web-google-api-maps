@@ -2,12 +2,13 @@
 import React from "react";
 import { Polyline as GooglePolyline } from "@react-google-maps/api";
 import { LatLng } from "./types";
+import { normalizeCoordinates } from "./utils/normalizeCoordinates";
 
 export interface PolylineProps {
     coordinates: LatLng[];
     strokeColor?: string;
     strokeWidth?: number;
-    lineDashPattern?: number[]; // Not directly supported in Google Maps
+    lineDashPattern?: number[];
     geodesic?: boolean;
     zIndex?: number;
     tappable?: boolean;
@@ -26,7 +27,7 @@ const Polyline: React.FC<PolylineProps> = ({
 }) => {
     const options: google.maps.PolylineOptions = {
         strokeColor,
-        strokeOpacity: 1.0,
+        strokeOpacity: 1,
         strokeWeight: strokeWidth,
         geodesic,
         zIndex,
@@ -41,15 +42,12 @@ const Polyline: React.FC<PolylineProps> = ({
                 repeat: `${lineDashPattern[0] + (lineDashPattern[1] || 0)}px`,
             },
         ];
-        options.strokeOpacity = 0; // Must disable solid stroke to show dashed
+        options.strokeOpacity = 0; // Hide solid stroke when using dashed
     }
 
     return (
         <GooglePolyline
-            path={coordinates.map((c) => ({
-                lat: c.latitude,
-                lng: c.longitude,
-            }))}
+            path={normalizeCoordinates(coordinates)}
             options={options}
             onClick={() => onPress?.()}
         />

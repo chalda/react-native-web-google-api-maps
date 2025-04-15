@@ -5,20 +5,20 @@ import { LatLng } from "./types";
 
 export interface CircleProps {
     center: LatLng;
-    radius: number; // in meters
-    strokeWidth?: number;
+    radius: number; //in meters
     strokeColor?: string;
+    strokeWidth?: number;
     fillColor?: string;
     zIndex?: number;
-    lineDashPattern?: number[]; // Not supported directly in Google Maps
+    lineDashPattern?: number[];
     onPress?: () => void;
 }
 
 const Circle: React.FC<CircleProps> = ({
     center,
     radius,
-    strokeWidth = 1,
     strokeColor = "#000",
+    strokeWidth = 1,
     fillColor = "rgba(0,0,0,0.1)",
     zIndex,
     lineDashPattern,
@@ -34,7 +34,7 @@ const Circle: React.FC<CircleProps> = ({
         clickable: !!onPress,
     };
 
-    // Google Maps does not support dashed borders for circles
+    // Note: Google Maps does not support dashed circles natively
 
     return (
         <GoogleCircle
