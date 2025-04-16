@@ -2,9 +2,11 @@ import React from "react";
 import { LatLng } from "./types";
 export interface MarkerProps {
     coordinate: LatLng;
+    children?: React.ReactNode;
     title?: string;
     description?: string;
-    pinColor?: string;
+    image?: any;
+    icon?: any;
     anchor?: {
         x: number;
         y: number;
@@ -14,11 +16,15 @@ export interface MarkerProps {
     flat?: boolean;
     zIndex?: number;
     tracksViewChanges?: boolean;
-    icon?: string;
+    identifier?: string;
     onPress?: () => void;
     onDragStart?: () => void;
     onDrag?: () => void;
-    onDragEnd?: (e: LatLng) => void;
+    onDragEnd?: (e: {
+        latitude: number;
+        longitude: number;
+    }) => void;
+    map?: google.maps.Map;
 }
 declare const Marker: React.FC<MarkerProps>;
 export default Marker;

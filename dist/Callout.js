@@ -1,24 +1,33 @@
-// Callout.tsx
-import { useEffect, useRef } from 'react';
-const Callout = ({ coordinate, content, map }) => {
+// Callout.tsx (web)
+import React, { useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom/client';
+import { useCalloutContext } from './CalloutContext';
+const Callout = ({ children }) => {
+    const { markerInstance, mapInstance } = useCalloutContext();
     const infoWindowRef = useRef(null);
+    const containerRef = useRef(null);
+    const rootRef = useRef(null);
     useEffect(() => {
-        if (!map)
+        if (!markerInstance || !mapInstance)
             return;
-        if (!infoWindowRef.current) {
-            infoWindowRef.current = new google.maps.InfoWindow();
-        }
-        infoWindowRef.current.setPosition({
-            lat: coordinate.latitude,
-            lng: coordinate.longitude,
+        containerRef.current = document.createElement('div');
+        rootRef.current = ReactDOM.createRoot(containerRef.current);
+        rootRef.current.render(<>{children}</>);
+        infoWindowRef.current = new google.maps.InfoWindow({
+            content: containerRef.current,
         });
-        infoWindowRef.current.setContent(typeof content === 'string' ? content : '<div>Custom JSX not supported yet</div>');
-        infoWindowRef.current.open(map);
+        infoWindowRef.current.open({
+            map: mapInstance,
+            anchor: markerInstance,
+        });
         return () => {
             infoWindowRef.current?.close();
+            rootRef.current?.unmount();
+            containerRef.current = null;
+            infoWindowRef.current = null;
+            rootRef.current = null;
         };
-    }, [map, coordinate, content]);
+    }, [markerInstance, mapInstance, children]);
     return null;
 };
 export default Callout;
-//Note: Rendering raw JSX inside an InfoWindow requires React portal tricks or createRoot.

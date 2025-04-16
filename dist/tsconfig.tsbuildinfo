@@ -1,1 +1,1 @@
-{"root":["../src/callout.tsx","../src/circle.tsx","../src/heatmap.tsx","../src/mapview.tsx","../src/marker.tsx","../src/overlay.tsx","../src/polyline.tsx","../src/index.ts","../src/types.ts","../src/usemap.ts"],"version":"5.8.3"}
+{"root":["../src/callout.tsx","../src/calloutcontext.tsx","../src/circle.tsx","../src/heatmap.tsx","../src/mapview.tsx","../src/marker.tsx","../src/overlay.tsx","../src/polygon.tsx","../src/polyline.tsx","../src/index.ts","../src/types.ts","../src/usemap.ts","../src/utils/normalizecoordinates.ts","../src/utils/normalizeimage.ts"],"version":"5.8.3"}

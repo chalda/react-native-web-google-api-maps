@@ -1,14 +1,13 @@
 import React from "react";
 import { LatLng } from "./types";
-export interface CircleProps {
-    center: LatLng;
-    radius: number;
+export interface PolygonProps {
+    coordinates: LatLng[];
     strokeColor?: string;
     strokeWidth?: number;
     fillColor?: string;
     zIndex?: number;
-    lineDashPattern?: number[];
+    tappable?: boolean;
     onPress?: () => void;
 }
-declare const Circle: React.FC<CircleProps>;
-export default Circle;
+declare const Polygon: React.FC<PolygonProps>;
+export default Polygon;
