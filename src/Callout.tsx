@@ -1,61 +1,45 @@
 // Callout.tsx (web)
-import React, { useEffect, useRef } from "react";
-import ReactDOM from "react-dom/client";
+import React, { useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom/client';
+import { useCalloutContext } from './CalloutContext';
 
 interface CalloutProps {
-    coordinate: { latitude: number; longitude: number };
-    map?: google.maps.Map | null;
-    content: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const Callout: React.FC<CalloutProps> = ({ coordinate, map, content }) => {
-    const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
-    const containerDivRef = useRef<HTMLDivElement | null>(null);
-    const reactRootRef = useRef<ReturnType<typeof ReactDOM.createRoot> | null>(
-        null,
-    );
+const Callout: React.FC<CalloutProps> = ({ children }) => {
+  const { markerInstance, mapInstance } = useCalloutContext();
 
-    useEffect(() => {
-        if (!map) return;
+  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const rootRef = useRef<ReturnType<typeof ReactDOM.createRoot> | null>(null);
 
-        // Create container div if needed
-        if (!containerDivRef.current) {
-            containerDivRef.current = document.createElement("div");
-        }
+  useEffect(() => {
+    if (!markerInstance || !mapInstance) return;
 
-        // Mount React content into the div
-        if (!reactRootRef.current && containerDivRef.current) {
-            reactRootRef.current = ReactDOM.createRoot(containerDivRef.current);
-        }
+    containerRef.current = document.createElement('div');
+    rootRef.current = ReactDOM.createRoot(containerRef.current);
+    rootRef.current.render(<>{children}</>);
 
-        if (reactRootRef.current) {
-            reactRootRef.current.render(<>{content}</>);
-        }
+    infoWindowRef.current = new google.maps.InfoWindow({
+      content: containerRef.current,
+    });
 
-        if (!infoWindowRef.current) {
-            infoWindowRef.current = new google.maps.InfoWindow({
-                content: containerDivRef.current!,
-                disableAutoPan: false,
-            });
-        }
+    infoWindowRef.current.open({
+      map: mapInstance,
+      anchor: markerInstance,
+    });
 
-        infoWindowRef.current.setPosition({
-            lat: coordinate.latitude,
-            lng: coordinate.longitude,
-        });
+    return () => {
+      infoWindowRef.current?.close();
+      rootRef.current?.unmount();
+      containerRef.current = null;
+      infoWindowRef.current = null;
+      rootRef.current = null;
+    };
+  }, [markerInstance, mapInstance, children]);
 
-        infoWindowRef.current.open(map);
-
-        return () => {
-            infoWindowRef.current?.close();
-            reactRootRef.current?.unmount();
-            infoWindowRef.current = null;
-            containerDivRef.current = null;
-            reactRootRef.current = null;
-        };
-    }, [map, coordinate.latitude, coordinate.longitude, content]);
-
-    return null;
+  return null;
 };
 
 export default Callout;

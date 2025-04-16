@@ -1,30 +1,34 @@
-// Marker.tsx (web)
-import React from "react";
+// Marker.tsx
+import React, { useEffect, useRef } from "react";
 import { Marker as GoogleMarker } from "@react-google-maps/api";
 import { LatLng } from "./types";
 import { normalizeImage } from "./utils/normalizeImage";
+import { CalloutContext } from "./CalloutContext";
 
 export interface MarkerProps {
     coordinate: LatLng;
+    children?: React.ReactNode;
     title?: string;
     description?: string;
-    image?: any; // RN-style require(...)
-    icon?: any; // raw Google Maps icon override
+    image?: any;
+    icon?: any;
     anchor?: { x: number; y: number };
     opacity?: number;
     draggable?: boolean;
     flat?: boolean;
     zIndex?: number;
     tracksViewChanges?: boolean;
-    identifier?: string;    
+    identifier?: string;
     onPress?: () => void;
     onDragStart?: () => void;
     onDrag?: () => void;
     onDragEnd?: (e: { latitude: number; longitude: number }) => void;
+    map?: google.maps.Map; // Required for InfoWindow
 }
 
 const Marker: React.FC<MarkerProps> = ({
     coordinate,
+    children,
     title,
     description,
     image,
@@ -40,24 +44,24 @@ const Marker: React.FC<MarkerProps> = ({
     onDragStart,
     onDrag,
     onDragEnd,
+    map,
 }) => {
+    const markerRef = useRef<google.maps.Marker | null>(null);
+
     const position = {
         lat: coordinate.latitude,
         lng: coordinate.longitude,
     };
 
-    let resolvedIcon: google.maps.Icon | undefined;
-
+    let resolvedIcon;
+    const normalized = normalizeImage(image);
     if (icon) {
         resolvedIcon = icon;
-    } else {
-        const normalized = normalizeImage(image);
-        if (typeof normalized === "string") {
-            resolvedIcon = {
-                url: normalized,
-                scaledSize: new google.maps.Size(50, 50), // Customize size here
-            };
-        }
+    } else if (typeof normalized === "string") {
+        resolvedIcon = {
+            url: normalized,
+            scaledSize: new google.maps.Size(50, 50),
+        };
     }
 
     const handleDragEnd = (e: google.maps.MapMouseEvent) => {
@@ -71,19 +75,25 @@ const Marker: React.FC<MarkerProps> = ({
     };
 
     return (
-        <GoogleMarker
-            position={position}
-            title={title}
-            label={description}
-            draggable={draggable}
-            opacity={opacity}
-            zIndex={zIndex}
-            icon={resolvedIcon}
-            onClick={onPress}
-            onDragStart={onDragStart}
-            onDrag={onDrag}
-            onDragEnd={handleDragEnd}
-        />
+        <CalloutContext.Provider
+            value={{ markerInstance: markerRef.current!, mapInstance: map }}
+        >
+            <GoogleMarker
+                onLoad={(marker) => (markerRef.current = marker)}
+                position={position}
+                title={title}
+                label={description}
+                draggable={draggable}
+                opacity={opacity}
+                zIndex={zIndex}
+                icon={resolvedIcon}
+                onClick={onPress}
+                onDragStart={onDragStart}
+                onDrag={onDrag}
+                onDragEnd={handleDragEnd}
+            />
+            {children}
+        </CalloutContext.Provider>
     );
 };
 
