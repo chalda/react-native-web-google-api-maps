@@ -14,16 +14,13 @@ export interface MarkerProps {
     opacity?: number;
     draggable?: boolean;
     flat?: boolean;
-    zIndex?: number;
     tracksViewChanges?: boolean;
+    zIndex?: number;
     identifier?: string;
     onPress?: () => void;
     onDragStart?: () => void;
     onDrag?: () => void;
-    onDragEnd?: (e: {
-        latitude: number;
-        longitude: number;
-    }) => void;
+    onDragEnd?: (e: LatLng) => void;
     map?: google.maps.Map;
 }
 declare const Marker: React.FC<MarkerProps>;

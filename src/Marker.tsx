@@ -15,15 +15,15 @@ export interface MarkerProps {
     anchor?: { x: number; y: number };
     opacity?: number;
     draggable?: boolean;
-    flat?: boolean;
+    flat?: boolean; // ignored on web
+    tracksViewChanges?: boolean; // ignored on web
     zIndex?: number;
-    tracksViewChanges?: boolean;
-    identifier?: string;
+    identifier?: string; // ignored on web
     onPress?: () => void;
     onDragStart?: () => void;
     onDrag?: () => void;
-    onDragEnd?: (e: { latitude: number; longitude: number }) => void;
-    map?: google.maps.Map; // Required for InfoWindow
+    onDragEnd?: (e: LatLng) => void;
+    map?: google.maps.Map;
 }
 
 const Marker: React.FC<MarkerProps> = ({
@@ -36,10 +36,10 @@ const Marker: React.FC<MarkerProps> = ({
     anchor,
     opacity = 1,
     draggable = false,
-    flat,
+    flat, // accepted but unused
+    tracksViewChanges, // accepted but unused
     zIndex,
-    tracksViewChanges,
-    identifier,
+    identifier, // accepted but unused
     onPress,
     onDragStart,
     onDrag,
@@ -53,15 +53,20 @@ const Marker: React.FC<MarkerProps> = ({
         lng: coordinate.longitude,
     };
 
-    let resolvedIcon;
-    const normalized = normalizeImage(image);
+    let resolvedIcon: google.maps.Icon | undefined;
     if (icon) {
         resolvedIcon = icon;
-    } else if (typeof normalized === "string") {
-        resolvedIcon = {
-            url: normalized,
-            scaledSize: new google.maps.Size(50, 50),
-        };
+    } else {
+        const normalized = normalizeImage(image);
+        if (normalized && typeof normalized === "string") {
+            resolvedIcon = {
+                url: normalized,
+                scaledSize: new google.maps.Size(50, 50),
+                anchor: anchor
+                    ? new google.maps.Point(anchor.x * 50, anchor.y * 50)
+                    : undefined,
+            };
+        }
     }
 
     const handleDragEnd = (e: google.maps.MapMouseEvent) => {
@@ -75,9 +80,7 @@ const Marker: React.FC<MarkerProps> = ({
     };
 
     return (
-        <CalloutContext.Provider
-            value={{ markerInstance: markerRef.current!, mapInstance: map }}
-        >
+        <>
             <GoogleMarker
                 onLoad={(marker) => (markerRef.current = marker)}
                 position={position}
@@ -92,8 +95,18 @@ const Marker: React.FC<MarkerProps> = ({
                 onDrag={onDrag}
                 onDragEnd={handleDragEnd}
             />
-            {children}
-        </CalloutContext.Provider>
+            {/* Provide marker + map to any nested <Callout /> */}
+            {children && (
+                <CalloutContext.Provider
+                    value={{
+                        markerInstance: markerRef.current!,
+                        mapInstance: map!,
+                    }}
+                >
+                    {children}
+                </CalloutContext.Provider>
+            )}
+        </>
     );
 };
 
