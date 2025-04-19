@@ -2,14 +2,17 @@
 #
 .DS_Store
 
+# common IDE stuff
+.idea/
+.vscode/
+
 # node.js
 #
 node_modules/
 npm-debug.log
 yarn-error.log
 
-# build folder, remove later
-#dist/
-
-/.idea
-/.vscode
+# build folder, should be git-ignored
+# for now, committed until I finish testing and can publish to NPM 
+# @TODO delete and gitignore /dist folder
+# dist/
