@@ -1,7 +1,11 @@
 # replacement for unmaintained `react-native-web-maps`
 
-polyfill for `react-native-maps` for the web using google maps via `@react-google-maps/api"`
+Web/browser polyfill for `react-native-maps` using google maps via `@react-google-maps/api"`.
 
+#### Motivation 
+I was struggling getting `react-native-web-maps` to work. The project wasnt getting a lot of support at the time, although it seems more active recently. Additionally, the underlying js lib for gmaps used by `react-native-web-maps` is no longer in active development and recommends switching to `@react-google-maps/api"` for new projects. So here we are. At this point this lib supports most features provided by native maps. 
+
+=
 ## how to use
 
 Get yourself a google API key from google Cloud.
